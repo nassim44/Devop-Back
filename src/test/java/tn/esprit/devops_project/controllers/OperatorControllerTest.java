@@ -7,8 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import org.springframework.test.web.servlet.MockMvc;
+
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tn.esprit.devops_project.entities.Operator;
 import tn.esprit.devops_project.repositories.OperatorRepository;
 import tn.esprit.devops_project.services.OperatorServiceImpl;
@@ -26,10 +30,12 @@ import static org.mockito.Mockito.*;
 class OperatorControllerTest {
     @Mock
     private OperatorRepository operatorRepositoryMock;
-    @Mock
+    @InjectMocks
     private OperatorServiceImpl operatorService = new OperatorServiceImpl(operatorRepositoryMock);
     @InjectMocks
     private OperatorController operatorController = new OperatorController(operatorService);
+
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(operatorController).build();
 
 
     @Test
@@ -56,12 +62,15 @@ class OperatorControllerTest {
     }
 
 
+
     @Test
-    void removeOperator() {
+    void removeOperator() throws Exception {
         Long operatorId = 1L;
-        operatorController.removeOperator(operatorId);
-        verify(operatorService, times(1)).deleteOperator(operatorId);
+
+        mockMvc.perform(delete("/operatot/{operatorId}", operatorId))
+                .andExpect(status().isOk());
     }
+
 
 
     @Test

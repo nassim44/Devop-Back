@@ -26,10 +26,11 @@ import static org.mockito.Mockito.*;
 class OperatorControllerTest {
     @Mock
     private OperatorRepository operatorRepositoryMock;
+    @Mock
+    private OperatorServiceImpl operatorService = new OperatorServiceImpl(operatorRepositoryMock);
     @InjectMocks
-    private OperatorController operatorController;
-    @InjectMocks
-    private OperatorServiceImpl operatorService;
+    private OperatorController operatorController = new OperatorController(operatorService);
+
 
     @Test
     public void testRetrieveAllOperators() {
@@ -48,13 +49,12 @@ class OperatorControllerTest {
 
     @Test
     void addOperator() {
-        Operator newOperator = new Operator(1L,"operator 1" ,"1" ,"nassim123",new HashSet<>());
+        Operator newOperator = new Operator(1L, "operator 1", "1", "nassim123", new HashSet<>());
         when(operatorService.addOperator(newOperator)).thenReturn(newOperator);
-
         Operator addedOperator = operatorController.addOperator(newOperator);
-
         assertEquals(newOperator, addedOperator);
     }
+
 
     @Test
     void removeOperator() {
